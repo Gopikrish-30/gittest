@@ -40,6 +40,8 @@ def gitput():
     if click.confirm("🚀 Do you want to push to GitHub now?"):
         run_cmd("git branch -M main")
         run_cmd("git push -u origin main")
+        click.echo(Fore.CYAN + "Success your code is successfully pushed to your github repo\n" + Style.RESET_ALL)
+
 
 def create_github_repo(username, token, repo_name, private):
     """Create a new GitHub repository."""
