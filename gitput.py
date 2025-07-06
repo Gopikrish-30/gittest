@@ -38,6 +38,7 @@ def gitput():
     run_cmd(f'git commit -m "{commit_msg}"')
 
     if click.confirm("🚀 Do you want to push to GitHub now?"):
+        run_cmd("git branch -M main")
         run_cmd("git push -u origin main")
 
 def create_github_repo(username, token, repo_name, private):
