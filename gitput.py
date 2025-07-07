@@ -6,6 +6,9 @@ import os
 from rich.console import Console
 from rich.prompt import Prompt, Confirm
 from rich.table import Table
+from rich.panel import Panel
+from rich.align import Align
+from rich.text import Text
 
 app = typer.Typer(help="🚀 GitPut – Your friendly GitHub assistant!")
 console = Console()
@@ -169,12 +172,22 @@ def reset():
 def main(ctx: typer.Context):
     """🎉 Welcome to GitPut!"""
     if ctx.invoked_subcommand is None:
-        console.print("[bold magenta]🎉 Welcome to GitPut – your friendly GitHub assistant![/bold magenta]\n")
+        console.print(Panel(
+            Align.center(
+                Text("Welcome to GitPut! 🚀", style="bold green"),
+                vertical="middle"
+            ),
+            title="GitPut",
+            subtitle="Your friendly GitHub assistant",
+            border_style="blue"
+        ))
+
         console.print("👉 [cyan]Tip:[/cyan] Run [green]gitput start[/green] to create/connect and push code.")
         console.print("👉 [cyan]Other commands:[/cyan] [green]status[/green], [green]reset[/green]\n")
         # Automatically call start if desired
         if Confirm.ask("🚀 Do you want to start now?", default=True):
             start()
+ 
 
 if __name__ == "__main__":
     app()
