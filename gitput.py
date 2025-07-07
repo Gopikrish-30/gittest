@@ -34,13 +34,34 @@ def load_credentials():
             return json.load(f)
     return None
 
+def validate_pat(token: str):
+    """Check if the Personal Access Token is valid."""
+    headers = {"Authorization": f"token {token}"}
+    response = requests.get("https://api.github.com/user", headers=headers)
+    if response.status_code == 200:
+        username = response.json()["login"]
+        console.print(f"[green]✅ PAT is valid. Logged in as {username}[/green]")
+        return username
+    else:
+        console.print(f"[red]❌ Invalid PAT: {response.json().get('message', 'Unknown error')}[/red]")
+        return None
+
+
 def ask_credentials():
-    """Prompt user for GitHub credentials and save them."""
-    username = Prompt.ask("👤 Enter your GitHub username")
-    email = Prompt.ask("📧 Enter your GitHub email")
-    token = Prompt.ask("🔑 Enter your GitHub Personal Access Token", password=True)
-    save_credentials(username, email, token)
-    return {"username": username, "email": email, "token": token}
+    """Prompt user for GitHub credentials and validate PAT."""
+    while True:
+        username = Prompt.ask("👤 Enter your GitHub username")
+        email = Prompt.ask("📧 Enter your GitHub email")
+        token = Prompt.ask("🔑 Enter your GitHub Personal Access Token", password=True)
+        validated_username = validate_pat(token)
+        if validated_username:
+            # Replace username with validated one from GitHub
+            username = validated_username
+            save_credentials(username, email, token)
+            return {"username": username, "email": email, "token": token}
+        else:
+            console.print("[yellow]⚠️ Let's try again.[/yellow]")
+
 
 def use_or_switch_account():
     """Load saved credentials or switch to a new account."""
